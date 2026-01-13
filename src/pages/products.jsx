@@ -208,7 +208,7 @@ export default function Products() {
     
      { key: "category", label: "Category" },
     {
-      key: "name",  label: "Item Name"
+      key: "name",  label: "Product Name"
       // render: (row) => (
       //   <span style={{ color: "#2563eb", fontWeight: 500 }}>
       //     {row.item_name}
@@ -284,7 +284,7 @@ export default function Products() {
     await deleteItems(id);
 
     // 🔥 Remove row immediately from UI
-    setItems((prev) => prev.filter((item) => item.id !== id));
+    setItems((prev) => prev.filter((item) => item.item_id !== id));
 
     Swal.fire({
       icon: "success",
@@ -306,17 +306,17 @@ export default function Products() {
   return (
     <div className="products-page">
       <div className="products-header">
-        <h2>Items</h2>
+        <h2>Product</h2>
         <button
           className="add-product-btn"
           onClick={() => navigate("/products/add")}
         >
-          + Add Item
+          + Add Product
         </button>
       </div>
 
       <CommonTable
-        title="Item List"
+        title="Product List"
         columns={columns}
         data={tableData}
         actions={(row) => (
