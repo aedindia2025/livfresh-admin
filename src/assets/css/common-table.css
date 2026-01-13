@@ -1,0 +1,311 @@
+/* ===============================
+   TABLE TOOLBAR – MODERN UI
+   =============================== */
+
+.table-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 0px;
+  border-radius: 8px;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+/* LEFT SIDE */
+.table-tools-left {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+/* RIGHT SIDE */
+.table-tools-right {
+  display: flex;
+  align-items: center;
+}
+
+/* ===============================
+   BUTTONS (CSV / EXCEL / COLUMNS)
+   =============================== */
+
+.table-tools-left button,
+.column-btn {
+  background: #ffffff;
+  color: #ff6b35;
+  border: 1px solid #ff6b35;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.table-tools-left button:hover,
+.column-btn:hover {
+  background: #ff6b35;
+  border-color: #ff6b35;
+  color: white;
+}
+
+/* ===============================
+   SEARCH INPUT (Right Aligned)
+   =============================== */
+
+.table-search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.table-search input {
+  width: 200px;
+  padding: 7px 10px;
+  font-size: 13px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  outline: none;
+}
+
+.table-search input:focus {
+  border-color: #ff6b35;
+}
+
+/* ===============================
+   COLUMN VISIBILITY DROPDOWN
+   =============================== */
+
+.column-dropdown {
+  position: relative;
+}
+
+.column-menu {
+  position: absolute;
+  top: 40px;
+  left: 0;
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 10px 12px;
+  min-width: 200px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  /* REMOVE display:none */
+  z-index: 100;
+}
+
+
+.column-menu label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  padding: 6px 0;
+  cursor: pointer;
+}
+
+.column-menu label:hover {
+  background: #f9fafb;
+}
+
+/* ===============================
+   MOBILE RESPONSIVE
+   =============================== */
+
+@media (max-width: 640px) {
+  .table-toolbar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .table-tools-left,
+  .table-tools-right {
+    justify-content: space-between;
+  }
+
+  .table-search input {
+    width: 100%;
+  }
+}
+/* ===============================
+   COMMON TABLE BASE
+   =============================== */
+
+.common-table-card {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+/* ===============================
+   TABLE
+   =============================== */
+
+.common-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+}
+
+.common-table thead {
+  background: #f3f4f6;
+}
+
+.common-table th {
+  text-align: left;
+  padding: 10px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.common-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #111827;
+  vertical-align: middle;
+}
+
+.common-table tbody tr:hover {
+  background: #f9fafb;
+}
+
+/* ===============================
+   ACTION BUTTONS
+   =============================== */
+
+.table-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.table-actions button {
+  border: none;
+  padding: 6px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.table-actions .view {
+  background: #e0f2fe;
+  color: #0284c7;
+}
+
+.table-actions .delete {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* ===============================
+   FOOTER
+   =============================== */
+
+.common-table-footer {
+  margin-top: 10px;
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* ===============================
+   RESPONSIVE (MOBILE)
+   =============================== */
+
+@media (max-width: 768px) {
+  .common-table thead {
+    display: none;
+  }
+
+  .common-table,
+  .common-table tbody,
+  .common-table tr,
+  .common-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .common-table tr {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    margin-bottom: 12px;
+    padding: 8px;
+  }
+
+  .common-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 8px;
+    border: none;
+  }
+
+  .common-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #6b7280;
+  }
+}
+/* ===============================
+   PAGINATION – ISOLATED
+   =============================== */
+
+.table-pagination {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.pagination-btn {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  padding: 4px 10px;
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.pagination-btn:hover {
+  background: #f3f4f6;
+}
+
+.pagination-btn.active {
+  background: #ff6b35;
+  color: #ffffff;
+  border-color: #ff6b35;
+}
+
+.pagination-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.view{    background-color: #def3fd;
+    border: 0px;
+    color: #0284c7;
+    padding: 4px;
+    border-radius: 5px;
+    font-size: 14px;margin-right: 8px;}
+.delete{background-color: #ffebe3;
+    border: 0px;
+    color: #ff4400;
+    padding: 4px;
+    border-radius: 5px;
+    font-size: 14px;}
+
+    /* Zebra striping */
+.common-table tbody tr:nth-child(even) {
+  background-color: #f9fafb; /* light gray */
+}
+
+.common-table tbody tr:nth-child(odd) {
+  background-color: #ffffff;
+}
+
+/* Hover effect (overrides zebra) */
+.common-table tbody tr:hover {
+  background-color: #f9f4f0; /* soft hover */
+}

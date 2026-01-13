@@ -1,0 +1,144 @@
+/* ---------------- LAYOUT ---------------- */
+.app-container {
+  display: flex;
+}
+
+.main-content {
+  padding: 16px;
+  min-height: calc(100vh - 56px);
+  background: #f9f4f0;
+}
+/* ---------------- SIDEBAR ---------------- */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh;
+  background: #ffffff;
+  color: #000000;
+  transition: width 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar.collapsed {
+  width: 70px;
+}
+/* ---------------- MAIN WRAPPER ---------------- */
+.main-wrapper {
+  margin-left: 240px;
+  width: 100%;
+  transition: margin-left 0.3s ease;
+}
+
+.sidebar.collapsed ~ .main-wrapper {
+  margin-left: 70px;
+}
+
+/* ---------------- LOGO WRAPPER ---------------- */
+.sidebar-header {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: height 0.3s ease;
+}
+
+/* ---------------- LOGO IMAGE ---------------- */
+.sidebar-header img {
+  height: 70px;           /* BIG logo */
+  width: auto;
+  transition: height 0.3s ease;
+}
+
+/* ---------------- COLLAPSED LOGO ---------------- */
+.sidebar.collapsed .sidebar-header {
+  height: 56px;           /* smaller header */
+}
+
+.sidebar.collapsed .sidebar-header img {
+  height: 32px;           /* SMALL logo */
+}
+
+
+/* MENU */
+.menu {
+  list-style: none;
+  padding: 8px;
+  margin: 0;
+}
+
+.menu-item {
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  color: #666;
+}
+
+.menu-item:hover {
+  background: #fff1e8;
+  color: #ff6b35;
+}
+
+.menu-item.active {
+  background: #fff1e8;
+  color: #ff6b35;
+}
+.icon:active {
+  color: #ff6b35 !important;
+}
+.icon {
+  font-size: 16px;
+  color:#666;
+}
+
+/* COLLAPSED */
+.sidebar.collapsed + .main-content {
+  margin-left: 70px;
+}
+
+.sidebar.collapsed .menu-item {
+  justify-content: center;
+}
+
+.sidebar.collapsed span {
+  display: none;
+}
+
+/* ---------------- MOBILE ---------------- */
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-100%);
+  }
+
+  .sidebar:not(.collapsed) {
+    transform: translateX(0);
+  }
+
+  .main-content {
+    margin-left: 0;
+  }
+
+  .sidebar-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 999;
+  }
+}
+
+.nav-toggle {
+  cursor: pointer;
+  font-size: 18px;
+  margin-right: 12px;
+}
+
+@media (max-width: 768px) {
+  .nav-toggle {
+    display: block;
+  }
+}

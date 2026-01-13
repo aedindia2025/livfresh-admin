@@ -1,0 +1,375 @@
+/* Page wrapper */
+.page {
+  padding: 20px;
+  font-family: Inter, sans-serif;
+}
+
+/* Page header */
+.page-header {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-header h2 {
+  margin: 0;
+}
+
+/* Buttons */
+.btn-primary {
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  background: #16a34a;
+}
+
+.btn-secondary {
+  background: #e5e7eb;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+/* Icon buttons */
+.icon-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 8px;
+  font-size: 16px;
+}
+
+.icon-btn.delete {
+  color: #dc3545;
+}
+
+
+/* 
+Add/Edit Product, Supplier, Customer */
+.form-container {
+  background: #fff;
+  border-radius: 8px;
+  padding: 20px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+
+.form-container .full {
+  grid-column: span 2;
+}
+
+label {
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 4px;
+  display: block;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  font-size: 14px;
+}
+
+textarea {
+  resize: none;
+}
+
+/* Status pill */
+.status-pill {
+  display: inline-block;
+  padding: 6px 12px;
+  border-radius: 12px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+}
+
+.status-pill.active {
+  background: #22c55e;
+}
+
+.status-pill.inactive {
+  background: #9ca3af;
+}
+.view {
+    background-color: #def3fd;
+    border: 0px;
+    color: #0284c7;
+    padding: 4px;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-right: 8px;
+}
+.delete {
+    background-color: #ffebe3;
+    border: 0px;
+    color: #ff4400;
+    padding: 4px;
+    border-radius: 5px;
+    font-size: 14px;
+}
+
+/* Dates */
+.dates {
+  display: flex;
+  justify-content: space-between;
+}
+
+.date-text {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* SupplierList, ProductList, SalesList */
+/* Clickable ID column */
+td:first-child {
+  color: #2563eb;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+td:first-child:hover {
+  text-decoration: underline;
+}
+
+.page-wrapper {
+  padding: 20px;
+  background: #f5f6fa;
+}
+
+.page-title {
+  font-size: 20px;
+  margin-bottom: 16px;
+  font-weight: 600;
+}
+
+.grid-2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
+}
+
+.card {
+  background: #fff;
+  padding: 18px;
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+.padding_ten{ padding-bottom: 20px;}
+.card-title {
+  font-size: 16px;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.card-section {
+  margin-bottom: 16px;
+}
+
+.section-title {
+  display: block;
+  margin-bottom: 6px;
+  font-size: 14px;
+  color: #555;
+}
+
+.btn-group {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.btn {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  font-size: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.btn-orange {
+  background: #ff6b35;
+  color: #fff;
+}
+
+.btn-orange:hover {
+  background: #e85a24;
+}
+
+.btn-outline {
+  background: #fff;
+  border: 1px solid #ff6b35;
+  color: #ff6b35;
+}
+
+.input {
+  width: 100%;
+  padding: 9px;
+  margin-bottom: 12px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+}
+
+.space-top {
+  margin-top: 10px;
+}
+
+.muted-text {
+  color: #777;
+  font-size: 14px;
+}
+.page-container {
+  padding: 20px;
+}
+
+.report-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.card h4 {
+  margin-bottom: 10px;
+}
+
+.input {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 12px;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-orange {
+  background: #ff7a00;
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-orange-outline {
+  background: #fff;
+  border: 1px solid #ff7a00;
+  color: #ff7a00;
+  padding: 6px 14px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.summary-card {
+  background: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+.summary-card p{ padding-bottom: 14px;}
+.report-generate p{ font-size: 18px;}
+.summary-card h3{ padding-bottom: 20px;;}
+
+.chart-card {
+  width: 100%;
+  margin: 0 auto;
+  padding: 1rem;
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.chart-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap; /* Wrap on smaller screens */
+  margin-bottom: 1rem;
+}
+
+.chart-header h3 {
+  font-size: 1.2rem;
+  margin: 0.2rem 0;
+}
+
+.chart-dropdown {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.9rem;
+  border-radius: 0.25rem;
+  border: 1px solid #ccc;
+}
+@media (max-width: 480px) {
+  .chart-card {
+    padding: 0.5rem;
+  }
+
+  .chart-header h3 {
+    font-size: 1rem;
+  }
+
+  .chart-dropdown {
+    font-size: 0.8rem;
+  }
+}
+/* Responsive wrapper */
+.table-responsive {
+  width: 100%;
+  overflow-x: auto; /* Enables horizontal scroll on small screens */
+}
+
+/* Optional: table styling for smaller screens */
+.table-responsive table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+/* Optional: make cells wrap text */
+.table-responsive td,
+.table-responsive th {
+  white-space: nowrap; /* Keeps columns in one line, scroll will appear if needed */
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+}
+
+/* On very small screens, you can reduce font size */
+@media (max-width: 480px) {
+  .table-responsive td,
+  .table-responsive th {
+    font-size: 0.8rem;
+    padding: 0.3rem 0.5rem;
+  }
+}
+
