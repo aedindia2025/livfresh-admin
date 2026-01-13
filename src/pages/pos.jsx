@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import { FaSearch, FaUserCircle, FaArrowLeft, FaPlus } from "react-icons/fa";
 import logo from "../assets/images/logo.png";
 import "./pos.css";
-import { getCustomers, postCustomer  } from "../api/commonapi";
+import { getCustomers, postCustomer, postOrderCustomer  } from "../api/commonapi";
 
 
 
 export default function POS() {
 
-  const [orderId, setOrderId] = useState(null);
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -48,26 +47,7 @@ export default function POS() {
     const itemQty = Number(qty);
     const price = Number(selectedItem.price);
 
-if (!orderId) {
-      try {
-        const res = await fetch(
-          "http://192.168.0.123:8004/api/orders/orders/",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              customer_id: selectedCustomer?.id || null,
-            }),
-          }
-        );
 
-        const data = await res.json();
-        setOrderId(data.id); // 🔵 backend order id
-      } catch (err) {
-        console.error("Order creation failed", err);
-        return;
-      }
-    }
     
     const existing = cart.find((i) => i.item_id === selectedItem.item_id);
     if (existing) {
@@ -103,22 +83,62 @@ if (!orderId) {
     return;
   }
 
-  try {
-    // await fetch(`http://192.168.0.123:8004/api/orders/orders/${ORDER_ID}/save-and-print/`, {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     payment_mode: paymentMode,
-    //     amount_received: amountReceived.toFixed(2),
-    //     payment_reference: `${paymentMode} Payment`,
-    //   }),
-    // });
+  
+    const payload = {
+      payment_mode: paymentMode,
+      amount_received: amountReceived.toFixed(2),
+      payment_reference: `${paymentMode} Payment`,
+      counter: 1,
+      user: 1,
 
-    setShowPrintModal(true); // ✅ OPEN RECEIPT
-  } catch {
-    alert("Save & Print failed");
-  }
-};
+ // CUSTOMER
+    name: selectedCustomer?.name || "Direct",
+    phone_no: selectedCustomer?.phone_no || "",
+    address: selectedCustomer?.address || "",
+
+    // ORDER INFO
+    invoice_date: new Date().toISOString().split("T")[0],
+    order_source: "POS",
+    counter: 1,
+    user: 1,
+
+    // ORDER ITEMS
+    items: cart.map((item) => ({
+      item_id: item.item_id,
+      qty: Number(item.qty),
+      unit: item.unit,
+      price: Number(item.price),
+    })),
+
+
+    };
+
+
+
+
+    
+
+  try {
+      const res = await fetch(
+        `http://192.168.0.123:8004/api/orders/orders/save-and-print/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!res.ok) throw new Error("Payment failed");
+
+      const data = await res.json();
+      console.log("Success:", data);
+
+      window.print(); // ✅ print dialog
+    } catch (err) {
+      alert("Save & Print failed");
+      console.error(err);
+    }
+  };
 
 
   // Fetch customers when modal opens
@@ -170,10 +190,8 @@ if (!orderId) {
                       className="search-item"
                       onClick={() => { setSelectedItem(item); setSearch(`${item.item_code} - ${item.item_name}`); setSuggestions([]); }}
                     >
-                      {/* <b>{item.item_code}</b> – {item.item_name} – ₹{item.price} */}
-                      <span className="code">{item.item_code}</span>
-                      <span className="name">{item.item_name}</span>
-                      <span className="price">₹{item.price}</span>
+                      <b>{item.item_code}</b> – {item.item_name} – ₹{item.price}
+                    
                     </div>
                   ))}
                 </div>
@@ -222,7 +240,7 @@ if (!orderId) {
             <div className="invoice-header">
               <div className="invoice-title">
                 <h3>Invoice Summary</h3>
-                <span className="invoice-id">INV-001</span>
+                {/* <span className="invoice-id">INV-001</span> */}
               </div>
             </div>
 
@@ -321,7 +339,7 @@ if (!orderId) {
           >
             <option value="">-- Select Customer --</option>
             {customers.map((c) => (
-              <option key={c.id} value={c.name}>
+              <option key={c.id} value={c.id}>
                 {c.name}
               </option>
             ))}
@@ -383,9 +401,10 @@ if (!orderId) {
         name: newCustomer.name,
         phone_no: newCustomer.phone_no,
         address: newCustomer.address,
+         order_source: "POS",
       };
 
-      const savedCustomer = await postCustomer(payload);
+      const savedCustomer = await postOrderCustomer(payload);
 
       // update customer list
       setCustomers((prev) => [...prev, savedCustomer]);

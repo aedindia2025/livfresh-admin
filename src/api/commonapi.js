@@ -181,6 +181,17 @@ export const getOrderReport = async () => {
     return [];
   }
 };
+
+export const postOrderCustomer= async (data) => {
+  try {
+    const response = await axios.post(`${API_URL}/orders/orders/`, data);
+    return response.data;
+  } catch (error) {
+    console.error("Add Customer API Error:", error.response?.data);
+    throw error;
+  }
+};
+
 // ================= PURCHASE API =================
 
 export const getPurchaseById = async (id) => {
@@ -322,3 +333,4 @@ export const deletePurchaseSupplier = async (id) => {
     return false;
   }
 };
+
