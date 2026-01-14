@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { FaSearch, FaUserCircle, FaArrowLeft, FaPlus } from "react-icons/fa";
 import logo from "../assets/images/logo.png";
 import "./pos.css";
-import { getCustomers, postCustomer  } from "../api/commonapi";
+import { getCustomers, postCustomer, postOrderCustomer  } from "../api/commonapi";
 
 
 
@@ -88,9 +88,34 @@ export default function POS() {
       amount_received: amountReceived.toFixed(2),
       payment_reference: `${paymentMode} Payment`,
       counter: 1,
-      user: 1
+      user: 1,
+
+ // CUSTOMER
+    name: selectedCustomer?.name || "Direct",
+    phone_no: selectedCustomer?.phone_no || "",
+    address: selectedCustomer?.address || "",
+
+    // ORDER INFO
+    invoice_date: new Date().toISOString().split("T")[0],
+    order_source: "POS",
+    counter: 1,
+    user: 1,
+
+    // ORDER ITEMS
+    items: cart.map((item) => ({
+      item_id: item.item_id,
+      qty: Number(item.qty),
+      unit: item.unit,
+      price: Number(item.price),
+    })),
+
+
     };
 
+
+
+
+    
 
   try {
       const res = await fetch(
@@ -214,7 +239,7 @@ export default function POS() {
             <div className="invoice-header">
               <div className="invoice-title">
                 <h3>Invoice Summary</h3>
-                <span className="invoice-id">INV-001</span>
+                {/* <span className="invoice-id">INV-001</span> */}
               </div>
             </div>
 
@@ -345,7 +370,7 @@ export default function POS() {
           >
             <option value="">-- Select Customer --</option>
             {customers.map((c) => (
-              <option key={c.id} value={c.name}>
+              <option key={c.id} value={c.id}>
                 {c.name}
               </option>
             ))}
@@ -407,9 +432,10 @@ export default function POS() {
         name: newCustomer.name,
         phone_no: newCustomer.phone_no,
         address: newCustomer.address,
+         order_source: "POS",
       };
 
-      const savedCustomer = await postCustomer(payload);
+      const savedCustomer = await postOrderCustomer(payload);
 
       // update customer list
       setCustomers((prev) => [...prev, savedCustomer]);

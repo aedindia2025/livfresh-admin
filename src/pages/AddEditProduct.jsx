@@ -2,10 +2,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import {
   getCategories,
-  getPurchaseSuppliers,
-  getPurchaseById,
-  postPurchase,
-  editPurchase,
+  getItemsById,
+  postItems,
+  editItems,
 } from "../api/commonapi.js";
 
 export default function AddEditProduct() {
@@ -16,8 +15,8 @@ export default function AddEditProduct() {
 
 
   const [form, setForm] = useState({
-    code: "",
-    name: "",
+    item_code: "",
+    item_name: "",
     category: "",
     description: "",
     cost: "",
@@ -41,25 +40,48 @@ useEffect(() => {
 
 
   // 🔹 Simulate Edit Mode Data Fetch
+  // useEffect(() => {
+  //   if (isEdit) {
+  //     setForm({
+  //       code: "PROD1",
+  //       name: "Pomfret (White)",
+  //       category: "Sea Food",
+  //       description:
+  //         "Fresh pomfret (white) - Fresh and frozen sea food items including various fish varieties",
+  //       cost: "264",
+  //       price: "264",
+  //       mrp: "264",
+  //       gst: "0",
+  //       minStock: "3",
+  //       maxStock: "10",
+  //       status: "Inactive",
+  //       image: null,
+  //     });
+  //   }
+  // }, [isEdit]);
+
+
   useEffect(() => {
-    if (isEdit) {
+  if (isEdit) {
+    getItemsById(id).then((data) => {
       setForm({
-        code: "PROD1",
-        name: "Pomfret (White)",
-        category: "Sea Food",
-        description:
-          "Fresh pomfret (white) - Fresh and frozen sea food items including various fish varieties",
-        cost: "264",
-        price: "264",
-        mrp: "264",
-        gst: "0",
-        minStock: "3",
-        maxStock: "10",
-        status: "Inactive",
+        category: String(data.category),
+        item_name: data.item_name || "",
+        item_code: data.item_code || "",
+        price: data.price || "",
+        mrp: data.mrp || "",
+        gst: data.gst || "",
+        minStock: data.min_stock || "",
+        maxStock: data.max_stock || "",
+        status: data.status || "Active",
+        description: data.description || "",
         image: null,
       });
-    }
-  }, [isEdit]);
+    });
+  }
+}, [id, isEdit]);
+
+
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -69,8 +91,30 @@ useEffect(() => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
+
+    const payload = {
+  category: Number(form.category),
+  item_name: form.item_name,
+  item_code: form.item_code,
+  price: Number(form.price),
+  mrp: form.mrp ? Number(form.mrp) : null,
+  gst: form.gst ? Number(form.gst) : 0,
+  min_stock: form.minStock || 3,
+  max_stock: form.maxStock || 10,
+  status: form.status === "Active",
+    description: form.description,
+};
+
+
+     if (isEdit) {
+      await editItems(id, payload);
+    } else {
+      await postItems(payload);
+    }
+
     console.log("Submitted Data:", form);
     navigate("/products");
   };
@@ -113,20 +157,34 @@ useEffect(() => {
 
           {/* Product Name */}
           <div>
-            <label>Item Name</label>
-            <input name="name" value={form.name} onChange={handleChange} required />
+            <label>Product Name</label>
+            <input
+  name="item_name"
+  value={form.item_name}
+  onChange={handleChange}
+  required
+/>
+
           </div>
            {/* Product Code */}
           <div>
             <label>Code</label>
-            <input name="code" value={form.code} onChange={handleChange} required />
-          </div>
+<input
+  name="item_code"
+  value={form.item_code}
+  onChange={handleChange}
+  required
+/>          </div>
 
           {/* Price */}
           <div>
             <label>Price</label>
-            <input name="price" value={form.price} onChange={handleChange} />
-          </div>
+<input
+  name="price"
+  value={form.price}
+  onChange={handleChange}
+  required
+/>          </div>
 
           {/* MRP with helper */}
           <div>
@@ -186,7 +244,7 @@ useEffect(() => {
           </div>
 
           {/* Creation & Update Dates */}
-          <div className="full dates">
+          {/* <div className="full dates">
             <div>
               <label>Creation Date</label>
               <div className="date-text">
@@ -199,7 +257,7 @@ useEffect(() => {
                 {isEdit ? "22-12-2025 09:20" : "Not available on creation"}
               </div>
             </div>
-          </div>
+          </div> */}
         </div>
 
         {/* Form Actions */}
