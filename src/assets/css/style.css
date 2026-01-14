@@ -372,4 +372,4 @@ td:first-child:hover {
     padding: 0.3rem 0.5rem;
   }
 }
-
+.navbar-right span{padding: 0px 10px; border-right: 1px solid #cacaca;}

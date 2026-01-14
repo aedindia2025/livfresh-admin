@@ -8,7 +8,6 @@ import { getCustomers, postCustomer  } from "../api/commonapi";
 
 export default function POS() {
 
-  const [orderId, setOrderId] = useState(null);
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState("");
   const [suggestions, setSuggestions] = useState([]);
@@ -23,7 +22,6 @@ export default function POS() {
   const [newCustomer, setNewCustomer] = useState({ name: "", phone_no: "", address: "" });
   const [showCustomerModal, setShowCustomerModal] = useState(false);
   const [isAddingNewCustomer, setIsAddingNewCustomer] = useState(false);
-  const [showPrintModal, setShowPrintModal] = useState(false);
 
   
 
@@ -48,26 +46,7 @@ export default function POS() {
     const itemQty = Number(qty);
     const price = Number(selectedItem.price);
 
-if (!orderId) {
-      try {
-        const res = await fetch(
-          "http://192.168.0.123:8004/api/orders/orders/",
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              customer_id: selectedCustomer?.id || null,
-            }),
-          }
-        );
 
-        const data = await res.json();
-        setOrderId(data.id); // 🔵 backend order id
-      } catch (err) {
-        console.error("Order creation failed", err);
-        return;
-      }
-    }
     
     const existing = cart.find((i) => i.item_id === selectedItem.item_id);
     if (existing) {
@@ -103,22 +82,37 @@ if (!orderId) {
     return;
   }
 
-  try {
-    // await fetch(`http://192.168.0.123:8004/api/orders/orders/${ORDER_ID}/save-and-print/`, {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({
-    //     payment_mode: paymentMode,
-    //     amount_received: amountReceived.toFixed(2),
-    //     payment_reference: `${paymentMode} Payment`,
-    //   }),
-    // });
+  
+    const payload = {
+      payment_mode: paymentMode,
+      amount_received: amountReceived.toFixed(2),
+      payment_reference: `${paymentMode} Payment`,
+      counter: 1,
+      user: 1
+    };
 
-    setShowPrintModal(true); // ✅ OPEN RECEIPT
-  } catch {
-    alert("Save & Print failed");
-  }
-};
+
+  try {
+      const res = await fetch(
+        `http://192.168.0.123:8004/api/orders/orders/save-and-print/`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        }
+      );
+
+      if (!res.ok) throw new Error("Payment failed");
+
+      const data = await res.json();
+      console.log("Success:", data);
+
+      window.print(); // ✅ print dialog
+    } catch (err) {
+      alert("Save & Print failed");
+      console.error(err);
+    }
+  };
 
 
   // Fetch customers when modal opens
@@ -170,10 +164,8 @@ if (!orderId) {
                       className="search-item"
                       onClick={() => { setSelectedItem(item); setSearch(`${item.item_code} - ${item.item_name}`); setSuggestions([]); }}
                     >
-                      {/* <b>{item.item_code}</b> – {item.item_name} – ₹{item.price} */}
-                      <span className="code">{item.item_code}</span>
-                      <span className="name">{item.item_name}</span>
-                      <span className="price">₹{item.price}</span>
+                      <b>{item.item_code}</b> – {item.item_name} – ₹{item.price}
+                    
                     </div>
                   ))}
                 </div>
@@ -276,6 +268,38 @@ if (!orderId) {
               <input type="number" placeholder="Enter amount received" value={amountReceived} onChange={(e) => setAmountReceived(Number(e.target.value))} style={{ width: "100%", padding: "8px", margin: "5px 0px" }} />
               <p className="change">Change: <span className="change_rupee">₹{amountReceived.toFixed(2)}</span></p>
             </div>
+
+   {/* THERMAL RECEIPT (PRINT ONLY) */}
+<div className="thermal-print">
+  <div className="receipt">
+    <h3>Livfresh POS</h3>
+    <p>Fresh Seafood</p>
+    <hr />
+
+    <div className="row">
+      <span>Date</span>
+      <span>1/13/2026</span>
+    </div>
+
+    <hr />
+
+    <div className="row">
+      <span>fish + crabs × 3</span>
+      <span>₹600.00</span>
+    </div>
+
+    <hr />
+
+    <div className="row total">
+      <strong>Total</strong>
+      <strong>₹630.00</strong>
+    </div>
+
+    <p className="center">Thank you 🙏</p>
+  </div>
+</div>
+
+ 
           </div>
 
           {/* STICKY ACTIONS */}
@@ -414,173 +438,10 @@ if (!orderId) {
 
 
 
+
       {/* STYLES */}
       <style>{`
-      .modal-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
-}
-
-.icon-only-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 8px;
-  border: none;
-  background: #ff6b35;
-  color: #fff;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.icon-only-btn:hover {
-  background: #e85c2a;
-}
-
-      .customer-details {
-  margin-top: 10px;
-  padding: 10px;
-  background: #f9f4f0;
-  border-radius: 8px;
-  font-size: 14px;
-  color: #444;
-}
-.customer-details p {
-  margin: 4px 0;
-}
-.modal select {
-  width: 100%;
-  padding: 10px;
-  margin-top: 10px;
-  border-radius: 8px;
-  border: 1px solid #e5e7eb;
-  font-size: 14px;
-}
-.modal-actions {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 16px;
-}
-.modal-actions button {
-  flex: 1;
-  margin-right: 8px;
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  background: #ff6b35;
-  color: #fff;
-  cursor: pointer;
-}
-.modal-actions button:last-child {
-  margin-right: 0;
-  background: #999;
-}
-
-      .action-bar { display: flex; gap: 10px; padding: 10px 0; }
-        .action-bar.sticky { position: sticky; bottom: 0; background: #f8fafc; padding-top: 12px; padding-bottom: 12px; }
-
-      .change{ font-size:12px; color:#7a7a7a; padding-bottom:10px }
-      .change_rupee{ font-size:13px; color:#ff6b35;  font-weight:600}
-      .cus{ padding-top:10px;}
-       .card { background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom:10px; }
-      .add-customer-btn {  background: #ff6b35;  color: #fff;  border: none;  padding: 6px 14px;  border-radius: 5px;  font-size: 12px;  font-weight: 500;  cursor: pointer;  transition: all 0.2s ease;}
-        .add-customer-btn:hover {  background: #e85c2a;}
-
-       .customer-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-      .customer-wrap{font-weight: 600; color:#646464;}
-      .cus{ padding-top:10px;}
-        * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
-        .pos-wrapper { height: 100vh; background: #f9f4f0; display: flex; flex-direction: column; }
-        .top-header { height: 60px; background: #fff; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 8px rgba(0,0,0,0.05); }
-        .logo { height: 36px; }
-        .admin { display: flex; gap: 6px; align-items: center; color: #1e293b; font-weight: 500; }
-        .pos-main { flex: 1; display: flex; gap: 16px; padding: 16px; overflow: hidden; }
-        .pos-left { flex: 3; display: flex; flex-direction: column; gap: 16px; overflow-y: auto; }
-        .pos-right { width: 380px; display: flex; flex-direction: column; gap: 16px; }
-        .scroll-area { overflow-y: auto; flex: 1; padding-right: 4px; background-color:#fff; border-radius: 10px; padding: 16px;box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);}
-        .pos-search { display: flex; gap: 10px;  border-radius: 10px; align-items: center; }
-        .back-btn { border: none; background: #fff; padding: 20px; border-radius: 10px; cursor: pointer; }
-        .back-btn:hover{background: #ff6b35; color:#fff;}
-        .search-group:hover{border: 1px solid #ff6b35;}
-        .search-group { flex: 1; display: flex; align-items: center; gap: 8px; background: #fff; padding: 18px; border-radius: 10px; border: 1px solid #e5e7eb; }
-        .search-group input { border: none; outline: none; width: 100%;    FONT-SIZE: large; }
-        .qty-group { display: flex; gap: 8px; }
-        .qty-group input { width: 150px; padding:24px; border-radius: 8px; font-size: large; }
-        .qty-group input:hover{border: 1px solid #ff6b35;}
-        .qty-group button { background: #ff6b35; color: #fff; border-radius: 10px; padding: 18px; border: none; cursor: pointer; transition: 0.2s;    font-size: large; }
-        .qty-group button:hover { background: #ff6b35; }
-        .qty-group button:active { background: #ff6b35; }
-        .table-wrapper { overflow-y: auto; max-height: 500px; border-radius: 16px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        table { width: 100%; border-collapse: collapse; background: #fff; }
-        thead th { position: sticky; top: 0; background: #ff6b35; color: #fff; padding: 12px; text-align: left; z-index: 1; }
-        td { padding: 12px; border-bottom: 1px solid #f1f5f9; }
-        tbody tr:hover { background: #f8fafc; }
-        .empty { text-align: center; padding: 60px; color: #64748b; }
-
-        .card { background: #fff; padding: 16px; border-radius: 10px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); margin-bottom:10px; }
-        .payment_card{background: #f9f4f0; border: 1px solid #ffd6c7;margin-bottom:10px; }
-        
-        .customer-header { display: flex; justify-content: space-between; margin-bottom: 10px; }
-        .invoice-header { display: flex; justify-content: space-between; margin-bottom: 8px;  padding-bottom:10px;  border-bottom: 1px solid #e5e5e5; }
-        .invoice-id { font-size: 12px; color: #ff6b35; }
-        .row { display: flex; justify-content: space-between; margin: 14px 0; }
-        .total { font-weight: 700; font-size: 18px; }
-        .action-bar { display: flex; gap: 10px; padding: 10px 0; }
-        .action-bar.sticky { position: sticky; bottom: 0; background: #f8fafc; padding-top: 12px; padding-bottom: 12px; }
-
-        .outline { flex: 1; border: 1px solid #ff6b35; background: transparent; padding: 12px; border-radius: 12px; cursor: pointer; }
-        .primary { flex: 1; background: #ff6b35; color: #fff; border: none; padding: 12px; border-radius: 12px; cursor: pointer; }
-
-        .modal-backdrop { position: fixed; inset: 0; background: rgba(0,0,0,.4); display: flex; align-items: center; justify-content: center; z-index: 999; }
-        .modal { background: #fff; padding: 28px; border-radius: 20px; width: 520px; max-width: 90vw;   min-height: 320px; }
-        .modal input, .modal textarea { width: 100%; padding: 14px; margin-top: 10px; border-radius: 8px; border: 1px solid #e5e7eb; }
-        .modal-actions { display: flex; gap: 10px; margin-top: 14px; }
-        .modal-actions button { flex: 1; padding: 10px; border-radius: 12px; border: none; background: #ff6b35; color: #fff; cursor: pointer; }
-
-        .order-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
-        .items-count {padding: 4px 8px; border-radius: 8px; font-size: 12px; }
-        .clear-btn { border: none; background: #fee2e2; color: #ef4444; padding: 6px 10px; border-radius: 8px; cursor: pointer; }
-
-        .order-item { display: flex; justify-content: space-between; align-items: center; margin: 10px 0; }
-        .qty-control { display: flex; gap: 6px; align-items: center; }
-        .qty-control button { border: none; background: #e5e7eb; padding: 4px 8px; border-radius: 6px; cursor: pointer; }
-        .item-name { flex: 1; font-size: 14px; }
-        .item-price { font-weight: 500; }
-
-        .discount-card { display: flex; justify-content: space-between; align-items: center; ; border: 1px solid #ff6b35; padding: 12px; border-radius: 10px; margin-bottom:10px }
-        .discount-left { display: flex; gap: 10px; align-items: center; }
-        .discount-icon { width: 36px; height: 36px; background: #ff6b35; color: #fff; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-weight: bold; }
-        .apply-btn { background: #ff6b35; color: #fff; border: none; padding: 6px 12px; border-radius: 999px; cursor: pointer; }
-
-        .empty-small { text-align: center; color: #94a3b8; font-size: 13px; }
-        .payment-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .payment-grid button { padding: 12px 0; border-radius: 12px; background: #f1f5f9; border: none; font-size: 14px; cursor: pointer; transition: 0.2s; }
-        .payment-grid button:hover { background: #ff6b35; color: #fff; }
-        .invoice-date {  padding: 8px 12px;  border-radius: 10px;  border: 1px solid #e5e7eb;  background: #f8fafc;  font-size: 13px;  cursor: pointer;     width: 100%;}
-        .add-customer-btn {  background: #ff6b35;  color: #fff;  border: none;  padding: 6px 14px;  border-radius: 5px;  font-size: 12px;  font-weight: 500;  cursor: pointer;  transition: all 0.2s ease;}
-        .add-customer-btn:hover {  background: #e85c2a;}
-        .invoice-header {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-          }
-
-          .invoice-title h3 {
-            margin: 0;
-          }
-
-          .invoice-date-wrap {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-          }
-
-          .invoice-date-wrap label { font-weight: 600;  color:#646464;    }
-          .customer-wrap{font-weight: 600; color:#646464;}
-
+     
 
       `}</style>
     </div>
