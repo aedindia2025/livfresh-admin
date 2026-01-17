@@ -12,7 +12,7 @@ export default function CustomerList() {
   const columns = [
     { key: "id", label: "ID" },
     { key: "name", label: "Customer Name" },
-    { key: "phone", label: "Phone Number" },
+    { key: "phone_no", label: "Phone Number" },
     { key: "address", label: "Address" },
     { key: "createdAt", label: "Created At" },
     { key: "updatedAt", label: "Last Update" },
@@ -27,6 +27,7 @@ export default function CustomerList() {
   }, []);
 
   const handleDelete = async (id) => {
+    console.log("Deleting ID:", id);
     const result = await Swal.fire({
       title: "Are you sure?",
       text: "This customer will be permanently deleted!",
@@ -45,7 +46,7 @@ export default function CustomerList() {
   
       // 🔥 Remove row instantly from UI
       setCustomers((prev) =>
-        prev.filter((item) => item.customer_id !== id)
+        prev.filter((item) => item.id !== id)
       );
   
       Swal.fire({
@@ -66,9 +67,9 @@ export default function CustomerList() {
   
 
   const tableData = customers.map((item) => ({
-    id: item.customer_id,
+    id: item.id,
     name: item.name,
-    phone: item.phone ?? "-",
+    phone_no: item.phone_no ?? "-",
     address: item.address ?? "-",
     createdAt: item.created_at
       ? new Date(item.created_at).toLocaleString()
@@ -85,7 +86,7 @@ export default function CustomerList() {
         <h2>Customers</h2>
         <button
           className="add-customer-btn"
-          onClick={() => navigate("/customer/add")}
+          onClick={() => navigate("/customers/add")}
         >
           + Add Customer
         </button>
@@ -101,7 +102,7 @@ export default function CustomerList() {
             <button
               className="icon-btn"
               title="Edit"
-              onClick={() => navigate(`/customer/edit/${row.id}`)}
+              onClick={() => navigate(`/customers/edit/${row.id}`)}
             >
               <FaEdit />
             </button>

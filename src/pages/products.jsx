@@ -247,24 +247,22 @@ export default function Products() {
 
   // FORMAT API DATA FOR TABLE
   const tableData = items.map((item) => ({
-    id: item.id,
-    image: item.image || "default",
-    code: item.item_code,
-    name: item.item_name,
-    category: item.category_name,
-     cost: `₹${Number(item.cost || 0).toFixed(2)}`,
-    stock: item.stock,
-    status:
-      item.stock === 0
-        ? "Out of Stock"
-        : item.stock <= 5
-        ? "Low Stock"
-        : "In Stock",
-      price: `₹${Number(item.price || 0).toFixed(2)}`,
-    updatedAt: item.updated_at
-      ? new Date(item.updated_at).toLocaleString()
-      : "-",
-  }));
+  id: item.item_id,   // ✅ FIXED
+  image: item.image || "default",
+  code: item.item_code,
+  name: item.item_name,
+  category: item.category_name,
+  cost: `₹${Number(item.cost || 0).toFixed(2)}`,
+  stock: item.current_stock,
+  status:
+    item.current_stock === 0
+      ? "Out of Stock"
+      : item.current_stock <= 5
+      ? "Low Stock"
+      : "In Stock",
+  price: `₹${Number(item.price || 0).toFixed(2)}`,
+}));
+
 
   const handleDelete = async (id) => {
   const result = await Swal.fire({
@@ -284,7 +282,7 @@ export default function Products() {
     await deleteItems(id);
 
     // 🔥 Remove row immediately from UI
-    setItems((prev) => prev.filter((item) => item.id !== id));
+    setItems((prev) => prev.filter((item) => item.item_id !== id));
 
     Swal.fire({
       icon: "success",
@@ -304,8 +302,9 @@ export default function Products() {
 
 
   return (
-    <div className="products-page">
-      <div className="products-header">
+    <div className="page">
+      {/* HEADER */}
+      <div className="page-header">
         <h2>Items</h2>
         <button
           className="add-product-btn"
@@ -315,6 +314,7 @@ export default function Products() {
         </button>
       </div>
 
+      {/* TABLE */}
       <CommonTable
         title="Item List"
         columns={columns}
@@ -333,26 +333,15 @@ export default function Products() {
             </button>
           </>
         )}
+        footer={
+          <span>
+            Showing 1 to {tableData.length} of {tableData.length} entries
+          </span>
+        }
       />
 
-      {/* PAGE STYLES */}
+      {/* PAGE-SPECIFIC STYLES */}
       <style>{`
-        .products-page {
-          padding: 20px;
-          font-family: Inter, sans-serif;
-        }
-
-        .products-header {
-          margin-bottom: 15px;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-        }
-
-        .products-header h2 {
-          margin: 0;
-        }
-
         .add-product-btn {
           background-color: #ff6b35;
           color: #fff;
@@ -365,7 +354,7 @@ export default function Products() {
         }
 
         .add-product-btn:hover {
-          background-color: #e74e16ff;
+          background-color: #e74e16;
         }
 
         .badge {
@@ -382,3 +371,4 @@ export default function Products() {
     </div>
   );
 }
+

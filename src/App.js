@@ -64,8 +64,8 @@ function App() {
 
           {/* CUSTOMERS */}
           <Route path="customer" element={<Customer/>} />
-          <Route path="customer/add" element={<AddEditCustomer />} />
-          <Route path="customer/edit/:id" element={<AddEditCustomer />} />
+          <Route path="customers/add" element={<AddEditCustomer />} />
+          <Route path="customers/edit/:id" element={<AddEditCustomer />} />
 
           {/* SALES */}
           <Route path="sales" element={<Sales />} />

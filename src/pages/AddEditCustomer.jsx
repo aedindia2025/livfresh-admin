@@ -11,7 +11,7 @@ export default function AddEditCustomer() {
   const [form, setForm] = useState({
     name: "",
     address: "",
-    phone: "",
+    phone_no: "",
 
   });
 
@@ -24,7 +24,7 @@ export default function AddEditCustomer() {
           setForm({
             name: data.name || "",
             address: data.address || "",
-            phone: data.phone || "",
+            phone_no: data.phone_no || "",
           
           });
         } catch (err) {
@@ -82,8 +82,8 @@ export default function AddEditCustomer() {
         <div>
           <label>Phone</label>
           <input
-            name="phone"
-            value={form.phone}
+            name="phone_no"
+            value={form.phone_no}
             onChange={handleChange}
             placeholder="Enter phone number"
           />
