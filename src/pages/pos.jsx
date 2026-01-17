@@ -112,11 +112,6 @@ export default function POS() {
 
     };
 
-
-
-
-    
-
   try {
       const res = await fetch(
         `http://192.168.0.123:8004/api/orders/orders/save-and-print/`,
@@ -294,37 +289,94 @@ export default function POS() {
               <p className="change">Change: <span className="change_rupee">₹{amountReceived.toFixed(2)}</span></p>
             </div>
 
-   {/* THERMAL RECEIPT (PRINT ONLY) */}
-<div className="thermal-print">
-  <div className="receipt">
-    <h3>Livfresh POS</h3>
-    <p>Fresh Seafood</p>
-    <hr />
+          {/* ================= POS RECEIPT (SALES STYLE) ================= */}
+          <div className="receipt-paper" id="print-receipt">
+            <div className="center">
+              <h4>LIVE FISH STORE</h4>
+              <p>123 Business Street, City - 600001</p>
+              <p> <b>Ph: +91 98765 43210 | GSTIN: GST123456789 </b></p>
+            </div>
 
-    <div className="row">
-      <span>Date</span>
-      <span>1/13/2026</span>
-    </div>
+            <hr />
 
-    <hr />
+            <div className="row">
+              <span>Invoice</span>
+              <span>POS-{Date.now()}</span>
+            </div>
+            <div className="row">
+              <span>Date</span>
+              <span>{new Date().toLocaleString()}</span>
+            </div>
+            <div className="row">
+              <span>Customer</span>
+              <span>{selectedCustomer?.name || "Direct"}</span>
+            </div>
 
-    <div className="row">
-      <span>fish + crabs × 3</span>
-      <span>₹600.00</span>
-    </div>
+            <hr />
 
-    <hr />
+            <p className="section-title">ITEMS</p>
 
-    <div className="row total">
-      <strong>Total</strong>
-      <strong>₹630.00</strong>
-    </div>
+            {cart.map((item, idx) => (
+              <div key={idx}>
+                <div className="row bold">
+                  <span>{item.item_name}</span>
+                  <span>
+                    ₹{(
+                      item.qty * item.price +
+                      (item.qty * item.price * item.tax_percentage) / 100
+                    ).toFixed(2)}
+                  </span>
+                </div>
+                <div className="row small">
+                  <span>
+                    {item.qty} × ₹{item.price}
+                  </span>
+                </div>
+              </div>
+            ))}
 
-    <p className="center">Thank you 🙏</p>
-  </div>
-</div>
+            <hr />
 
- 
+            <div className="row">
+              <span>Sub Total</span>
+              <span>₹{subtotal.toFixed(2)}</span>
+            </div>
+
+            <div className="row">
+              <span>Tax</span>
+              <span>₹{totalTax.toFixed(2)}</span>
+            </div>
+
+            <div className="row bold">
+              <span>Total</span>
+              <span>₹{grandTotal.toFixed(2)}</span>
+            </div>
+
+            <hr />
+
+            <div className="row">
+              <span>Payment Mode</span>
+              <span>{paymentMode}</span>
+            </div>
+
+            <div className="row">
+              <span>Amount Received</span>
+              <span>₹{amountReceived.toFixed(2)}</span>
+            </div>
+
+            <div className="row">
+              <span>Balance</span>
+              <span>₹{(amountReceived - grandTotal).toFixed(2)}</span>
+            </div>
+
+            <hr />
+
+            <p className="center small receipt-footer">
+              Thank you! Visit again.
+              <br />
+            <span>No returns or exchanges. Prices include all taxes.</span> 
+            </p>
+          </div>
           </div>
 
           {/* STICKY ACTIONS */}
